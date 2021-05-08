@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<title>{% block title %}{% endblock %}</title>
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+		<link href="{% static 'cs50gram/styles.css' %}" rel="stylesheet">
+
+		{% block script %}{% endblock %}
+	</head>
+
+	<body>
+
+		<!-- Navbar -->
+		<nav class="navbar navbar-expand-lg navbar-light" id="nav-background">
+			<a class="navbar-brand" id="nav-brand" href="{% url 'index' %}">CS50gram</a>
+
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				
+				<div class="navbar-nav">
+					<a class="nav-item nav-link" href="{% url 'index' %}">Home </a>
+					<a class="nav-item nav-link" href="#">Explore</a>
+					<a class="nav-item nav-link" href="#">Profile</a>
+				</div>
+
+				{% if user.is_authenticated %}
+					<div class="navbar-nav ml-auto">
+						<a class="nav-item nav-link" href="#">Logout</a>
+					</div>
+				{% else %}
+					<div class="navbar-nav ml-auto">
+						<a class="nav-item nav-link" href="#">Login</a>
+						<a class="nav-item nav-link" href="#">Register</a>
+					</div>
+				{% endif %}
+
+			</div>
+		</nav>
+
+		<div id="body">
+			{% block body %}
+			{% endblock %}
+		</div>
+
+		<!-- Bootstrap 4 CDN -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+	</body>
+</html>
