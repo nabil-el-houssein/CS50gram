@@ -34,12 +34,12 @@
 
 				{% if user.is_authenticated %}
 					<div class="navbar-nav ml-auto">
-						<a class="nav-item nav-link" href="#">Logout</a>
+						<a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
 					</div>
 				{% else %}
 					<div class="navbar-nav ml-auto">
-						<a class="nav-item nav-link" href="#">Login</a>
-						<a class="nav-item nav-link" href="#">Register</a>
+						<a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+						<a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
 					</div>
 				{% endif %}
 
