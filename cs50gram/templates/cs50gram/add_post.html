@@ -1,0 +1,36 @@
+{% extends 'cs50gram/layout.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+	Add Post
+{% endblock %}
+
+{% block body %}
+	
+	<div class="container mt-4" date-title="add-post-page">
+
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<h2>Add Post...</h2>
+			</div>
+		</div>
+
+		<div class="row justify-content-center mt-4">
+			<img id="image-preview">
+		</div>
+		
+		<div class="row justify-content-center mt-4">
+			<div class="col-md-8">
+					{% crispy form %}
+			</div>
+		</div>
+
+	</div>
+
+{% endblock %}
+
+{% block script %}
+	<script type="text/javascript" src="{% static 'cs50gram/preview_image.js' %}"></script>
+{% endblock %}

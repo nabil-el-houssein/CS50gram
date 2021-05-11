@@ -24,3 +24,26 @@
 	text-align: center;
 	font-size: 35px;
 }
+
+#image-preview {
+	width: 350px;
+	height: 300px;
+}
+
+.col-md-6 > h5 {
+	margin-top: 10px
+}
+
+.liked {
+	cursor: pointer;
+	margin-top: 5px;
+	margin-left: 1px;
+	margin-bottom: 10px;
+}
+
+.comment {
+	cursor: pointer;
+	margin-top: 5px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+}

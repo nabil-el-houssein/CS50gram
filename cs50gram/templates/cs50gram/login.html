@@ -17,9 +17,14 @@
 				</div>
 			{% endif %}
 
-				{% crispy form %}
-				
-				<p class="text-center">Don't have an account? <a href="{% url 'register' %}"> Register</a></p>
+			<!-- Checking if 'next' parameter is available to redirect the user after log in -->
+			{% if request.GET.next %}
+				<input type="hidden" name="next" value="{{ request.GET.next }}">
+			{% endif %}
+
+			{% crispy form %}
+			
+			<p class="text-center">Don't have an account? <a href="{% url 'register' %}"> Register</a></p>
 		</div>
 	</div>
 

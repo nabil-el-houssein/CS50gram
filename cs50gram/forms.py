@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Row, Column
 import re
 
-from .models import User
+from .models import User, Post
 
 
 class UserRegisterForm(forms.ModelForm):
@@ -30,7 +30,7 @@ class UserRegisterForm(forms.ModelForm):
 		self.helper.form_method = "post"
 		self.helper.form_action = 'register'
 
-		self.helper.add_input(Submit("register", "Register", css_class='btn-primary btn-dark mx-auto'))
+		self.helper.add_input(Submit("register", "Register", css_class='btn-primary btn-dark'))
 
 		self.helper.layout = Layout(
 			Row(
@@ -101,3 +101,25 @@ class UserLoginForm(forms.Form):
 		self.helper.form_action = 'login'
 
 		self.helper.add_input(Submit("login", "Login", css_class='btn-primary btn-dark'))
+
+
+class PostForm(forms.ModelForm):
+	class Meta:
+		model = Post
+		fields = ["image", "caption"]
+
+		# Add widgets to specific form fields 
+		widgets = {
+			"caption": forms.TextInput(attrs={"autocomplete": "off"}),
+		}
+
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+
+		self.helper = FormHelper()
+
+		self.helper.form_method = "post"
+		self.helper.form_action = 'add-post'
+
+		self.helper.add_input(Submit("add-post", "Add Post", css_class='btn-primary btn-dark mt-3'))

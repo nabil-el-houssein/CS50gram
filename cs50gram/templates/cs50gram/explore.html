@@ -1,0 +1,49 @@
+{% extends 'cs50gram/layout.html' %}
+{% load static %}
+
+{% block title %}
+	Explore
+{% endblock %}
+
+{% block body %}
+		
+	<div class="container" >
+		{% for post in posts %}
+
+			<div class="row justify-content-center mt-5">
+				<div class="col-md-6" style="background-color: #e5e8e8">
+
+					<!-- Username -->
+					<h5> @{{ post.posted_by }} </h5>
+
+					<!-- Post image -->
+					<img src="{{ post.image.url }}" class="img-fluid" width="550px">
+
+					<!-- Like Icon and Counter -->
+					<img data-id="{{post.id}}" id="post-like-{{post.id}}" class="liked"
+						{% if request.user in post.like.all %}
+							data-is_liked="yes"
+							src="https://img.icons8.com/ios-filled/32/fa314a/hearts.png"
+						{% else %}
+							data-is_liked="no"
+							src="https://img.icons8.com/windows/32/000000/like--v2.png"
+						{% endif %}
+					/> <span id="like-counter-{{post.id}}"> {{ post.like.count }} </span>
+
+					<img src="https://img.icons8.com/windows/32/000000/speech-bubble--v1.png" class="comment" /> <span> 0 </span>
+
+					{% if post.caption %}
+						<p class="mt-2"><strong>{{ post.posted_by }}</strong> {{ post.caption }}</p>
+					{% endif %}
+					
+				</div>
+			</div>
+
+		{% endfor %}
+	</div>
+
+{% endblock %}
+
+{% block script %}
+	<script type="text/javascript" src="{% static 'cs50gram/index.js' %}"></script>
+{% endblock %}

@@ -26,13 +26,14 @@
 
 			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 				
-				<div class="navbar-nav">
-					<a class="nav-item nav-link" href="{% url 'index' %}">Home </a>
-					<a class="nav-item nav-link" href="#">Explore</a>
-					<a class="nav-item nav-link" href="#">Profile</a>
-				</div>
-
 				{% if user.is_authenticated %}
+					<div class="navbar-nav">
+						<a class="nav-item nav-link" href="{% url 'index' %}">Home </a>
+						<a class="nav-item nav-link" href="{% url 'explore' %}">Explore</a>
+						<a class="nav-item nav-link" href="#">Profile</a>
+						<a class="nav-item nav-link" href="{% url 'add-post' %}">Add Post</a>
+					</div>
+					
 					<div class="navbar-nav ml-auto">
 						<a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
 					</div>
