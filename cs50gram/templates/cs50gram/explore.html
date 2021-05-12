@@ -1,4 +1,6 @@
 {% extends 'cs50gram/layout.html' %}
+
+{% load crispy_forms_tags %}
 {% load static %}
 
 {% block title %}
@@ -10,11 +12,12 @@
 	<div class="container" >
 		{% for post in posts %}
 
-			<div class="row justify-content-center mt-5">
-				<div class="col-md-6" style="background-color: #e5e8e8">
+			<div class="row justify-content-center mt-3">
+				<div class="col-md-6" style="background-color: #f4f6f6">
 
 					<!-- Username -->
 					<h5> @{{ post.posted_by }} </h5>
+
 
 					<!-- Post image -->
 					<img src="{{ post.image.url }}" class="img-fluid" width="550px">
@@ -30,20 +33,70 @@
 						{% endif %}
 					/> <span id="like-counter-{{post.id}}"> {{ post.like.count }} </span>
 
-					<img src="https://img.icons8.com/windows/32/000000/speech-bubble--v1.png" class="comment" /> <span> 0 </span>
+					<!-- Comment icon and counter -->
+					<span class="comment-pointer" data-id="{{post.id}}" id="view-comments" data-toggle="modal" data-target="#exampleModalCenter">
+						<img src="https://img.icons8.com/windows/32/000000/speech-bubble--v1.png" class="comment-icon"  /> <span id="comment-counter-{{post.id}}"> {{ post.comments.all.count }} </span>
+					</span>
 
+					<!-- Caption -->
 					{% if post.caption %}
-						<p class="mt-2"><strong>{{ post.posted_by }}</strong> {{ post.caption }}</p>
+						<h5 class="mt-2"><strong>{{ post.posted_by }}</strong> {{ post.caption }}</h5>
 					{% endif %}
-					
+
+					<!-- Date Posted -->
+					<h6 class="gray">Posted on {{ post.date_posted }}</h6>
+
+					<!-- Add Comment -->
+					<div class="input-group mb-3">
+						<input type="text" placeholder="Add Comment" id="post-comment-{{post.id}}" class="form-control mr-1">
+						<button class="btn btn-outline-dark comment" data-id="{{post.id}}" type="button">Add Comment</button>
+					</div>
+
+					<!-- Show comments -->
+					{% if post.comments.all %}
+
+						<!-- Gets the comments of each post based on the related_name -->
+						{% for comment in post.comments.all.reverse|slice:":2" %}
+							<div>
+								<b> {{ comment.commented_by }} </b>
+								<span class="gray"> {{ comment.comment }} </span>
+							</div>
+						{% endfor %}
+
+						<!-- Div to show recently added comment -->
+						<div id="recent_comment"></div>
+
+						<div class="text-center mb-2 view-all">
+							<a data-toggle="modal" data-id="{{post.id}}" id="view-comments" data-target="#exampleModalCenter">View all comments...</a>
+						</div>
+
+					{% endif %}
+
 				</div>
 			</div>
-
+			
 		{% endfor %}
+	</div>
+
+
+<!-- Modal -->
+	<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle"></h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body"></div>
+			</div>
+		</div>
 	</div>
 
 {% endblock %}
 
 {% block script %}
 	<script type="text/javascript" src="{% static 'cs50gram/index.js' %}"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 {% endblock %}

@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Row, Column
 import re
 
-from .models import User, Post
+from .models import User, Post, Comment
 
 
 class UserRegisterForm(forms.ModelForm):

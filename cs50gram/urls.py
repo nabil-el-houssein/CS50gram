@@ -13,4 +13,6 @@ urlpatterns = [
 
 	# APIs
 	path("like_post/", views.like_post),
+	path("add_comment/", views.add_comment),
+	path("comments/<int:post_id>", views.load_comments)
 ]

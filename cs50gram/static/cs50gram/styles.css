@@ -41,9 +41,22 @@
 	margin-bottom: 10px;
 }
 
-.comment {
+.comment-icon {
 	cursor: pointer;
 	margin-top: 5px;
 	margin-left: 10px;
 	margin-bottom: 10px;
+}
+
+.gray {
+	color: gray;
+}
+
+.view-all {
+	cursor: pointer;
+	color: dodgerblue;
+}
+
+.comment-pointer {
+	cursor: pointer;
 }

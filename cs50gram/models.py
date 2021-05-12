@@ -14,3 +14,11 @@ class Post(models.Model):
 	caption = models.CharField(max_length=255, null=True, blank=True)
 	like = models.ManyToManyField(User, blank=True, related_name="liked")
 	date_posted = models.DateTimeField()
+
+
+class Comment(models.Model):
+	"""Tracks the comments on each post"""
+
+	post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+	commented_by = models.ForeignKey(User, on_delete=models.CASCADE)
+	comment = models.CharField(max_length=128)

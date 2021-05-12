@@ -1,14 +1,15 @@
 from django.shortcuts import render
 from django.contrib.auth import logout, login, authenticate
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core import serializers
 import datetime
 
 from .forms import UserRegisterForm, UserLoginForm, PostForm
-from .models import User, Post
+from .models import User, Post, Comment
 
 
 @login_required
@@ -140,7 +141,7 @@ def explore(request):
 @csrf_exempt
 @login_required
 def like_post(request):
-	"""Updates the like post in the database and the like_post API"""
+	"""Updates the post like in the database and the like_post API"""
 
 	if request.method == "POST":
 
@@ -160,8 +161,65 @@ def like_post(request):
 			post.save()
 
 			return JsonResponse({'like_count': post.like.count(), 'is_liked': is_liked, "status": 201})
-        
+			
 		except:
 			return JsonResponse({'error': "Post not found", "status": 404})
-            
+	
+	# If the request is GET send a bad request (status 400)
 	return JsonResponse({}, status=400)
+
+
+@csrf_exempt
+@login_required
+def add_comment(request):
+	"""Updates the post comment in the database and the add_comment API"""
+
+	if request.method == "POST":
+
+		# Gets the form data from the js
+		post_id = request.POST.get('id')
+		comment = request.POST.get('comment')
+
+		try:
+			# Gets the post based on the id
+			post = Post.objects.get(id=post_id)
+
+			# Creates a new comment
+			post_comment = Comment.objects.create(post=post, commented_by=request.user, comment=comment)
+
+			# Gets the user who commented
+			user = f"{request.user} "
+
+			# Return the new number of comments and the user who added the comment
+			return JsonResponse({"comment_count": post.comments.all().count(), "commented_by": user, "status": 201})
+		
+		except:
+			return JsonResponse({"error": "Post not found", "status": 404})
+	
+	# If the request is GET send a bad request (status 400)
+	return JsonResponse({}, status=400)
+
+
+@login_required
+def load_comments(request, post_id):
+	"""Returns the comments to index.js"""
+
+	try:
+		# Filter comments returned based on post id
+		post = Post.objects.get(pk=post_id)
+
+		post_comments = Comment.objects.filter(post=post)
+
+		comments = []
+
+		for comment in post_comments:
+			comments.append({
+				"comment": comment.comment,
+				"commented_by": commented_by,
+				})
+
+		comments_json = serializers.serialize('json', comments)
+		return HttpResponse(comments_json, content_type='application/json')
+		
+	except:
+		return JsonResponse({"error": "Post not found", "status": 404})
