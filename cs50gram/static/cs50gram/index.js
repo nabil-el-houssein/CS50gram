@@ -114,8 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					span = document.createElement("span");
 					br = document.createElement("br");
 					span.classList.add("gray")
-
-					b.textContent = comment.commented_by + " ";
+					console.log(comment)
+					b.textContent = comment.commented_by__username + " ";
 					span.textContent = comment.comment;
 
 					modal_body.appendChild(b);
