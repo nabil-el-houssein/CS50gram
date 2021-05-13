@@ -208,18 +208,9 @@ def load_comments(request, post_id):
 		# Filter comments returned based on post id
 		post = Post.objects.get(pk=post_id)
 
-		post_comments = Comment.objects.filter(post=post)
+		comments = list(Comment.objects.filter(post=post).values("comment", "commented_by__username"))
 
-		comments = []
-
-		for comment in post_comments:
-			comments.append({
-				"comment": comment.comment,
-				"commented_by": commented_by,
-				})
-
-		comments_json = serializers.serialize('json', comments)
-		return HttpResponse(comments_json, content_type='application/json')
+		return JsonResponse({"comments": comments})
 		
 	except:
 		return JsonResponse({"error": "Post not found", "status": 404})
