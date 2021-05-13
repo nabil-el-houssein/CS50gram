@@ -6,6 +6,7 @@ urlpatterns = [
 	path("", views.index, name="index"),
 	path("add-post", views.add_post, name="add-post"),
 	path("explore", views.explore, name="explore"),
+	path("profile/<str:username>", views.profile, name="profile"),
 
 	path("login", views.login_view, name="login"),
 	path("register", views.register, name="register"),
@@ -14,5 +15,7 @@ urlpatterns = [
 	# APIs
 	path("like_post/", views.like_post),
 	path("add_comment/", views.add_comment),
-	path("comments/<int:post_id>", views.load_comments)
+	path("comments/<int:post_id>", views.load_comments),
+	path("follow/", views.follow),
+	path("user/<str:username>/<str:keyword>", views.followings),
 ]

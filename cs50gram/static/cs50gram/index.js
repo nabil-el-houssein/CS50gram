@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			fetch(`/comments/${post_id}`)
 			.then(res => res.json())
 			.then(res => {
-				console.log(res)
+
 				// Appoints the number of comments in the Modal title
 				document.querySelector("#exampleModalLongTitle").textContent = `${res.comments.length} Comments`;
 
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					span = document.createElement("span");
 					br = document.createElement("br");
 					span.classList.add("gray")
-					console.log(comment)
+
 					b.textContent = comment.commented_by + " ";
 					span.textContent = comment.comment;
 

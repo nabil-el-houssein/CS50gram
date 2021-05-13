@@ -9,7 +9,7 @@ from django.core import serializers
 import datetime
 
 from .forms import UserRegisterForm, UserLoginForm, PostForm
-from .models import User, Post, Comment
+from .models import User, Post, Comment, Profile
 
 
 @login_required
@@ -138,6 +138,16 @@ def explore(request):
 	return render(request, "cs50gram/explore.html", {"posts": posts})
 
 
+@login_required
+def profile(request, username):
+	"""Shows the profile of every user"""
+
+	# Gets the user profile based on the username
+	profile = Profile.objects.get(user__username=username)
+
+	return render(request, "cs50gram/profile.html", {"profile": profile})
+
+
 @csrf_exempt
 @login_required
 def like_post(request):
@@ -223,3 +233,59 @@ def load_comments(request, post_id):
 		
 	except:
 		return JsonResponse({"error": "Post not found", "status": 404})
+
+
+@csrf_exempt
+@login_required
+def follow(request):
+	"""Updates the followings in the database"""
+
+	if request.method == "POST":
+
+		# Gets the form data from the js
+		user = request.POST.get("user")
+		keyword = request.POST.get("keyword")
+
+		# Gets the user profile to be followed based on the username
+		profile = Profile.objects.get(user__username=user).user
+
+		try:
+			
+			if keyword == "Follow":
+				# Follow the user and reverse the keyword
+				current_user = Profile.objects.get(user=request.user)
+				current_user.followings.add(profile)
+				keyword = "Unfollow"
+			elif keyword == "Unfollow":
+				# Unfollow the user and reverse the keyword
+				current_user = Profile.objects.get(user=request.user)
+				current_user.followings.remove(profile)
+				keyword = "Follow"
+
+			return JsonResponse({"followers": profile.followers.all().count(), "keyword": keyword})
+
+		except:
+			return JsonResponse({"error": "User not found", "status": 404})
+
+
+@csrf_exempt
+@login_required
+def followings(request, username, keyword):
+	"""Fetches the followers of a user and send them as json"""
+
+	try:
+		profile = Profile.objects.get(user__username=username)
+
+		response = []
+
+		if keyword == "followings":
+			response = list(profile.followings.all().values("username"))
+		elif keyword == "followers":
+			followers = profile.user.followers.all()
+			for follower in followers:
+				response.append({"username": follower.user.username})
+
+		return JsonResponse({"response": response})
+
+	except:
+		return JsonResponse({"error": "User not found", "status": 404})

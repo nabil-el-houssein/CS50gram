@@ -1,0 +1,199 @@
+{% extends 'cs50gram/layout.html' %}
+
+{% load static %}
+
+{% block title %}
+	Profile
+{% endblock %}
+
+{% block body %}
+	
+	<header>
+
+		<div class="container">
+
+			<div class="profile">
+
+				<div class="profile-image">
+
+					<img src="https://pbs.twimg.com/profile_images/1313117763519606784/IkM0WYGt_400x400.jpg" alt="Profile Picture" width="150px">
+
+				</div>
+
+				<div class="profile-user-settings">
+
+					<h1 class="profile-user-name">{{ profile.user.username }}</h1>
+
+					{% if user.is_authenticated and request.user.username == profile.user.username %}
+						<button class="btn profile-edit-btn">Edit Profile</button>
+					{% elif user.is_authenticated and request.user.username != profile.user %}
+
+							<!-- If the user already has no followers; permit to follow -->
+							{% if profile.user.followers.all.count == 0 %}
+
+								<button data-id="{{profile.user}}" class="btn profile-edit-btn follow"><span id="keyword">Follow</span></button>
+
+							{% else %}
+
+								<!-- If the user has followers; check if the current user already follows -->
+								{% for follower in profile.user.followers.all %}
+
+									{% if request.user == follower.user %}
+										<button data-id="{{profile.user}}" class="btn profile-edit-btn follow"><span id="keyword">Unfollow</span></button>
+									{% else %}
+										<button data-id="{{profile.user}}" class="btn profile-edit-btn follow"><span id="keyword">Follow</span></button>
+									{% endif %}
+
+								{% endfor %}
+
+							{% endif %}
+
+
+					{% endif %}
+					<!-- button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button -->
+
+				</div>
+
+				<div class="profile-stats">
+
+					<ul>
+						<li><span class="profile-stat-count">{{ profile.user.posts.count }}</span> posts</li>
+						<li data-toggle="modal" data-id="{{profile.user.username}}" data-target="#exampleModalCenter" class="followings" data-keyword="followers"><span class="profile-stat-count" id="follower-counter">{{ profile.user.followers.all.count }}</span> followers</li>
+						<li data-toggle="modal" data-id="{{profile.user.username}}" data-target="#exampleModalCenter" class="followings" data-keyword="followings"><span class="profile-stat-count">{{ profile.followings.count }}</span> following</li>
+					</ul>
+
+				</div>
+
+				<div class="profile-bio">
+					<hr>
+
+					<h2 class="profile-real-name">{{ profile.user.first_name }} {{ profile.user.last_name }}</h2>
+
+					<hr>
+
+					<p> <b> Date Joined:</b> {{ profile.user.date_joined|date:"D d M Y" }}
+
+					{% if profile.birthdate %}
+					 	<span style="margin-left: 10px"> <b> BirthDate: </b> {{ profile.birthdate }}</span></p>
+					{% endif %}
+
+					{% if profile.gender %}
+						<p> <b> Gender: </b> {{ profile.gender }}</p>
+					{% endif %}
+
+					<hr>
+
+					{% if profile.bio %}
+						<p> {{ profile.bio }}</p>
+					{% endif %}
+
+				</div>
+
+			</div>
+			<!-- End of profile section -->
+
+		</div>
+		<!-- End of container -->
+
+	</header>
+
+	<main>
+		<div class="container">
+			{% if profile.user.posts.all.count == 0 %}
+				<center>
+					<h1>No Posts</h1>
+				</center>
+			{% else %}
+				{% for post in profile.user.posts.all %}
+					<div class="row justify-content-center mt-3">
+					<div class="col-md-6" style="background-color: #f4f6f6">
+
+						<!-- Username -->
+						<a href="{% url 'profile' post.posted_by %}"><h5 class="mt-2"> @{{ post.posted_by }} </h5></a>
+
+
+						<!-- Post image -->
+						<img src="{{ post.image.url }}" class="img-fluid" width="550px">
+
+						<!-- Like Icon and Counter -->
+						<img data-id="{{post.id}}" id="post-like-{{post.id}}" class="liked"
+							{% if request.user in post.like.all %}
+								data-is_liked="yes"
+								src="https://img.icons8.com/ios-filled/32/fa314a/hearts.png"
+							{% else %}
+								data-is_liked="no"
+								src="https://img.icons8.com/windows/32/000000/like--v2.png"
+							{% endif %}
+						/> <span id="like-counter-{{post.id}}"> {{ post.like.count }} </span>
+
+						<!-- Comment icon and counter -->
+						<span class="comment-pointer" data-id="{{post.id}}" id="view-comments" data-toggle="modal" data-target="#exampleModalCenter">
+							<img src="https://img.icons8.com/windows/32/000000/speech-bubble--v1.png" class="comment-icon"  /> <span id="comment-counter-{{post.id}}"> {{ post.comments.all.count }} </span>
+						</span>
+
+						<!-- Caption -->
+						{% if post.caption %}
+							<h5 class="mt-2"><strong>{{ post.posted_by }}</strong> {{ post.caption }}</h5>
+						{% endif %}
+
+						<!-- Date Posted -->
+						<h6 class="gray">Posted on {{ post.date_posted }}</h6>
+
+						<!-- Add Comment -->
+						<div class="input-group mb-3">
+							<input type="text" placeholder="Add Comment" id="post-comment-{{post.id}}" class="form-control mr-1">
+							<button class="btn btn-outline-dark comment" data-id="{{post.id}}" type="button">Add Comment</button>
+						</div>
+
+						<!-- Show comments -->
+						{% if post.comments.all %}
+
+							<!-- Gets the comments of each post based on the related_name -->
+							{% for comment in post.comments.all.reverse|slice:":2" %}
+								<div>
+									<a href="{% url 'profile' comment.commented_by %}"><b> {{ comment.commented_by }} </b></a>
+									<span class="gray"> {{ comment.comment }} </span>
+								</div>
+							{% endfor %}
+
+							<!-- Div to show recently added comment -->
+							<div id="recent_comment"></div>
+
+							<div class="text-center mb-2 view-all">
+								<a data-toggle="modal" data-id="{{post.id}}" id="view-comments" data-target="#exampleModalCenter">View all comments...</a>
+							</div>
+
+						{% endif %}
+
+					</div>
+				</div>
+				{% endfor %}
+			{% endif %}
+	</main>
+
+<!-- Modal -->
+	<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle"></h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body"></div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block script %}
+	<script type="text/javascript" src="{% static 'cs50gram/index.js' %}"></script>
+	<script type="text/javascript" src="{% static 'cs50gram/follow.js' %}"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block style %}
+	<link href="{% static 'cs50gram/profile.css' %}" rel="stylesheet">
+{% endblock %}
