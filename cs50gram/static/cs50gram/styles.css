@@ -60,3 +60,44 @@
 .show {
 	cursor: pointer;
 }
+
+.search {
+	position: relative;
+}
+
+#search-results {
+	display: none;
+    position: absolute;
+    width: auto; 
+    background: white;
+    border-radius: 6px;
+    height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1;
+    padding: 15px;
+
+    border: 1px solid gray;
+
+    /*This is relative to the navbar now*/
+    left: 0;
+    right: 0;
+    top: 40px;
+}
+
+.single-res {
+	cursor: pointer;
+	color: black;
+}
+
+.single-res:hover {
+	cursor: pointer;
+	color: rgba(var(--f52,142,142,142),1);
+}
+
+@media (min-width: 968px) {
+	.search {
+		position: absolute;
+		margin-left: 500px;
+	}
+}

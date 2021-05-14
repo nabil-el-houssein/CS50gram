@@ -346,3 +346,21 @@ def followings(request, username, keyword):
 
 	except:
 		return JsonResponse({"error": "User not found", "status": 404})
+
+
+@login_required
+@csrf_exempt
+def search(request, query):
+	"""Sends realtime search results"""
+
+	try:
+
+		if User.objects.filter(username__icontains=query).exists():
+			response = list(User.objects.filter(username__icontains=query).values("username", "first_name", "last_name"))
+			return JsonResponse({"response": response})
+		else:
+			error = "No results Found"
+			return JsonResponse({"error": error})
+		
+	except:
+		return JsonResponse({"error": "An error has occured"})

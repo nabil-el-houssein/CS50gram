@@ -14,6 +14,8 @@
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
 
+		<!-- Search Script-->
+		<script src="{% static 'cs50gram/search.js' %}"></script>
 		{% block style %}{% endblock %}
 
 		{% block script %}{% endblock %}
@@ -24,6 +26,14 @@
 		<!-- Navbar -->
 		<nav class="navbar navbar-expand-lg navbar-light" id="nav-background">
 			<a class="navbar-brand" id="nav-brand" href="{% url 'index' %}">CS50gram</a>
+
+			<div class="input-group w-50 search">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">@</span>
+				</div>
+				<input type="text" class="form-control" placeholder="Username" value="" aria-label="Username" id="search" aria-describedby="basic-addon1">
+				<div id="search-results"></div>
+			</div>
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>

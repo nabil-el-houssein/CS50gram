@@ -19,4 +19,5 @@ urlpatterns = [
 	path("post/<str:keyword>/<int:post_id>", views.load_comments),
 	path("follow/", views.follow),
 	path("user/<str:username>/<str:keyword>", views.followings),
+	path("search/<str:query>", views.search),
 ]
