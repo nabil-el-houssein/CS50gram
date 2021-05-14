@@ -47,6 +47,10 @@ def register(request):
 			# If the form is not valid, render the template with errors
 			return render(request, "cs50gram/register.html", {"form": form})
 
+	# Checks if the user is already authenticated
+	if request.user.is_authenticated:
+		return HttpResponseRedirect(reverse("index"))
+
 	form = UserRegisterForm()
 	return render(request, "cs50gram/register.html", {"form": form})
 
@@ -84,6 +88,10 @@ def login_view(request):
 		else:
 			# If the form is not valid, render the template with errors
 			return render(request, "cs50gram/register.html", {"form": form})
+
+	# Checks if the user is already authenticated
+	if request.user.is_authenticated:
+		return HttpResponseRedirect(reverse("index"))
 
 	form = UserLoginForm()
 	return render(request, "cs50gram/login.html", {"form": form})
