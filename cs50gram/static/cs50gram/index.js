@@ -106,15 +106,15 @@ document.addEventListener('DOMContentLoaded', function() {
 				// Appoints the number of comments in the Modal title
 				document.querySelector("#exampleModalLongTitle").textContent = `${res.comments.length} Comments`;
 
+				modal_body = document.querySelector(".modal-body")
+
 				res.comments.forEach(comment => {
-					
-					modal_body = document.querySelector(".modal-body")
 
 					b = document.createElement("b");
 					span = document.createElement("span");
 					br = document.createElement("br");
 					span.classList.add("gray")
-					console.log(comment)
+					
 					b.textContent = comment.commented_by__username + " ";
 					span.textContent = comment.comment;
 
