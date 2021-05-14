@@ -8,8 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import datetime
 
-from .forms import UserRegisterForm, UserLoginForm, PostForm
-from .models import User, Post, Comment
+from .forms import UserRegisterForm, UserLoginForm, PostForm, ProfileForm
+from .models import User, Post, Comment, Profile
 
 
 @login_required
@@ -138,6 +138,58 @@ def explore(request):
 	return render(request, "cs50gram/explore.html", {"posts": posts})
 
 
+@login_required
+def profile(request, username):
+	"""Shows the profile of every user"""
+
+	# Gets the user profile based on the username
+	profile = Profile.objects.get(user__username=username)
+
+	return render(request, "cs50gram/profile.html", {"profile": profile})
+
+
+@login_required
+def edit_profile(request):
+	
+	profile = Profile.objects.get(user=request.user)
+
+	if request.method == "POST":
+
+		form = ProfileForm(request.POST, instance=profile)
+
+		if form.is_valid():
+			form.save()
+
+			# Gets the field values from the request
+			first_name = form.cleaned_data["first_name"]
+			last_name = form.cleaned_data["last_name"]
+
+			user = User.objects.get(pk=request.user.id)
+
+			user.first_name = first_name
+			user.last_name = last_name
+
+			user.save()
+
+			return HttpResponseRedirect(reverse("profile", args=[profile.user.username]))
+
+
+		else:
+			# If the form is not valid, render the template with errors
+			return render(request, "cs50gram/edit_profile.html", {"form": form})
+
+	# Load the profile form pre-populated with initial values
+	initial = {
+		"first_name": profile.user.first_name,
+		"last_name": profile.user.last_name,
+		"birthdate": profile.birthdate,
+		"gender": profile.gender,
+		"bio": profile.bio
+	}
+	form = ProfileForm(initial=initial)
+	return render(request, "cs50gram/edit_profile.html", {"form": form})
+
+
 @csrf_exempt
 @login_required
 def like_post(request):
@@ -214,3 +266,62 @@ def load_comments(request, post_id):
 		
 	except:
 		return JsonResponse({"error": "Post not found", "status": 404})
+
+
+@csrf_exempt
+@login_required
+def follow(request):
+	"""Updates the followings in the database"""
+
+	if request.method == "POST":
+
+		# Gets the form data from the js
+		user = request.POST.get("user")
+		keyword = request.POST.get("keyword")
+
+		# Gets the user profile to be followed based on the username
+		profile = Profile.objects.get(user__username=user).user
+
+		try:
+			
+			if keyword == "Follow":
+				# Follow the user and reverse the keyword
+				current_user = Profile.objects.get(user=request.user)
+				current_user.followings.add(profile)
+				keyword = "Unfollow"
+			elif keyword == "Unfollow":
+				# Unfollow the user and reverse the keyword
+				current_user = Profile.objects.get(user=request.user)
+				current_user.followings.remove(profile)
+				keyword = "Follow"
+
+			return JsonResponse({"followers": profile.followers.all().count(), "keyword": keyword})
+
+		except:
+			return JsonResponse({"error": "User not found", "status": 404})
+
+
+@csrf_exempt
+@login_required
+def followings(request, username, keyword):
+	"""Fetches the followers of a user and send them as json"""
+
+	try:
+		profile = Profile.objects.get(user__username=username)
+
+		response = []
+		response_count = None
+
+		if keyword == "followings":
+			response = list(profile.followings.all().values("username"))
+			response_count = profile.followings.all().count()
+		elif keyword == "followers":
+			followers = profile.user.followers.all()
+			response_count = profile.user.followers.all().count()
+			for follower in followers:
+				response.append({"username": follower.user.username})
+
+		return JsonResponse({"response": response, "response_count": response_count})
+
+	except:
+		return JsonResponse({"error": "User not found", "status": 404})

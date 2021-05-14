@@ -16,7 +16,7 @@
 				<div class="col-md-6" style="background-color: #f4f6f6">
 
 					<!-- Username -->
-					<h5> @{{ post.posted_by }} </h5>
+					<a href="{% url 'profile' post.posted_by %}"><h5 class="mt-2"> @{{ post.posted_by }} </h5></a>
 
 
 					<!-- Post image -->
@@ -58,7 +58,7 @@
 						<!-- Gets the comments of each post based on the related_name -->
 						{% for comment in post.comments.all.reverse|slice:":2" %}
 							<div>
-								<b> {{ comment.commented_by }} </b>
+								<a href="{% url 'profile' comment.commented_by %}"><b> {{ comment.commented_by }} </b></a>
 								<span class="gray"> {{ comment.comment }} </span>
 							</div>
 						{% endfor %}

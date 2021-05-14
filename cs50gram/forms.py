@@ -2,8 +2,9 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Row, Column
 import re
+from datetime import date
 
-from .models import User, Post, Comment
+from .models import User, Post, Comment, Profile
 
 
 class UserRegisterForm(forms.ModelForm):
@@ -123,3 +124,41 @@ class PostForm(forms.ModelForm):
 		self.helper.form_action = 'add-post'
 
 		self.helper.add_input(Submit("add-post", "Add Post", css_class='btn-primary btn-dark mt-3'))
+
+
+class ProfileForm(forms.ModelForm):
+
+	# Creates additional Form fields
+	first_name = forms.CharField(max_length=30)
+	last_name = forms.CharField(max_length=30)
+
+	class Meta:
+		model = Profile
+		fields = ["first_name", "last_name", "birthdate", "bio", "gender"]
+
+		# Add widgets to specific form fields 
+		widgets = {
+			"birthdate": forms.SelectDateWidget(years=range(1950, date.today().year)),
+			"bio": forms.Textarea(attrs={"rows": 2, "id": "textarea"}),
+		}
+
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+
+		self.helper = FormHelper()
+
+		self.helper.form_method = "post"
+		self.helper.form_action = 'edit-profile'
+
+		self.helper.add_input(Submit("save", "Update Profile", css_class='btn-primary btn-dark'))
+
+		self.helper.layout = Layout(
+			Row(
+				Column("first_name"),
+				Column("last_name"),
+			),
+			"birthdate",
+			"gender",
+			"bio",
+		)
