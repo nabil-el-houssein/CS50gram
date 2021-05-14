@@ -270,3 +270,11 @@ img {
         }
     }
 }
+
+.modal-title {
+    font-size: 25px;
+}
+
+.modal-body {
+    font-size: 18px;
+}

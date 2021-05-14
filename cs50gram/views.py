@@ -268,15 +268,18 @@ def followings(request, username, keyword):
 		profile = Profile.objects.get(user__username=username)
 
 		response = []
+		response_count = None
 
 		if keyword == "followings":
 			response = list(profile.followings.all().values("username"))
+			response_count = profile.followings.all().count()
 		elif keyword == "followers":
 			followers = profile.user.followers.all()
+			response_count = profile.user.followers.all().count()
 			for follower in followers:
 				response.append({"username": follower.user.username})
 
-		return JsonResponse({"response": response})
+		return JsonResponse({"response": response, "response_count": response_count})
 
 	except:
 		return JsonResponse({"error": "User not found", "status": 404})

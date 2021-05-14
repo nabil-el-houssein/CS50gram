@@ -42,6 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			.then(res => {
 
 				modal_body = document.querySelector(".modal-body");
+
+				document.querySelector(".modal-title").textContent = `${res.response_count} ${keyword}`;
+
 				res.response.forEach(res => {
 
 					b = document.createElement("b");
