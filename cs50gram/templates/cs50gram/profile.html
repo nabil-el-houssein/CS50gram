@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-	Profile
+	{{ profile.user.username }}
 {% endblock %}
 
 {% block body %}
@@ -25,7 +25,7 @@
 					<h1 class="profile-user-name">{{ profile.user.username }}</h1>
 
 					{% if user.is_authenticated and request.user.username == profile.user.username %}
-						<button class="btn profile-edit-btn">Edit Profile</button>
+						<a href="{% url 'edit-profile' %}"><button class="btn profile-edit-btn">Edit Profile</button></a>
 					{% elif user.is_authenticated and request.user.username != profile.user %}
 
 							<!-- If the user already has no followers; permit to follow -->
@@ -78,7 +78,7 @@
 					{% endif %}
 
 					{% if profile.gender %}
-						<p> <b> Gender: </b> {{ profile.gender }}</p>
+						<p> <b> Gender: </b> {{ profile.get_gender_display }}</p>
 					{% endif %}
 
 					<hr>

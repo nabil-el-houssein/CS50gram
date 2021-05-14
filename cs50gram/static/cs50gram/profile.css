@@ -278,3 +278,7 @@ img {
 .modal-body {
     font-size: 18px;
 }
+
+a, a:hover {
+    color: inherit;
+}
