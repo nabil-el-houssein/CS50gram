@@ -31,10 +31,10 @@
 							data-is_liked="no"
 							src="https://img.icons8.com/windows/32/000000/like--v2.png"
 						{% endif %}
-					/> <span id="like-counter-{{post.id}}"> {{ post.like.count }} </span>
+					/> <span data-keyword="likes" data-id="{{post.id}}" class="show" id="like-counter-{{post.id}}" data-toggle="modal" data-target="#exampleModalCenter"> {{ post.like.count }} </span>
 
 					<!-- Comment icon and counter -->
-					<span class="comment-pointer" data-id="{{post.id}}" id="view-comments" data-toggle="modal" data-target="#exampleModalCenter">
+					<span class="show" data-id="{{post.id}}" data-keyword="comments" data-toggle="modal" data-target="#exampleModalCenter">
 						<img src="https://img.icons8.com/windows/32/000000/speech-bubble--v1.png" class="comment-icon"  /> <span id="comment-counter-{{post.id}}"> {{ post.comments.all.count }} </span>
 					</span>
 
@@ -54,7 +54,7 @@
 
 					<!-- Div to show recently added comment -->
 					<div id="recent_comment"></div>
-					
+
 					<!-- Show comments -->
 					{% if post.comments.all %}
 
@@ -67,7 +67,7 @@
 						{% endfor %}
 
 						<div class="text-center mb-2 view-all">
-							<a data-toggle="modal" data-id="{{post.id}}" id="view-comments" data-target="#exampleModalCenter">View all comments...</a>
+							<a data-toggle="modal" class="show" data-keyword="comments" data-id="{{post.id}}" data-target="#exampleModalCenter">View all comments...</a>
 						</div>
 
 					{% endif %}

@@ -268,16 +268,22 @@ def add_comment(request):
 
 
 @login_required
-def load_comments(request, post_id):
+def load_comments(request, keyword, post_id):
 	"""Returns the comments to index.js"""
 
 	try:
-		# Filter comments returned based on post id
+
 		post = Post.objects.get(pk=post_id)
+		response = []
+		if keyword == "comments":
+			# Filter comments to be returned based on post id
+			response = list(Comment.objects.filter(post=post).values("comment", "commented_by__username"))
+		
+		elif keyword == "likes":
+			# Return all the user who liked the post 
+			response = list(post.like.all().values("username"))
 
-		comments = list(Comment.objects.filter(post=post).values("comment", "commented_by__username"))
-
-		return JsonResponse({"comments": comments})
+		return JsonResponse({"keyword": keyword, "response": response})
 		
 	except:
 		return JsonResponse({"error": "Post not found", "status": 404})

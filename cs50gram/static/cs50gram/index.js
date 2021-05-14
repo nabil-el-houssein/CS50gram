@@ -91,32 +91,37 @@ document.addEventListener('DOMContentLoaded', function() {
 		$(".modal-body").html("");
 	});
 
-	view = document.querySelectorAll("#view-comments");
+	view = document.querySelectorAll(".show");
 	view.forEach(element => {
 		element.addEventListener("click", () => {
 
-			// Gets the post id
+			// Gets the post id and the keyword
 			post_id = element.getAttribute("data-id");
+			keyword = element.getAttribute("data-keyword")
 
-			// Fetch the comments of the post
-			fetch(`/comments/${post_id}`)
+			// Fetch the comments|likes of the post based on the keyword
+			fetch(`/post/${keyword}/${post_id}`)
 			.then(res => res.json())
 			.then(res => {
 
 				// Appoints the number of comments in the Modal title
-				document.querySelector("#exampleModalLongTitle").textContent = `${res.comments.length} Comments`;
+				document.querySelector("#exampleModalLongTitle").textContent = `${res.response.length} ${keyword}`;
 
 				modal_body = document.querySelector(".modal-body")
 
-				res.comments.forEach(comment => {
+				res.response.forEach(single_res => {
 
 					b = document.createElement("b");
 					span = document.createElement("span");
 					br = document.createElement("br");
 					span.classList.add("gray")
 					
-					b.textContent = comment.commented_by__username + " ";
-					span.textContent = comment.comment;
+					if (res.keyword == "comments") {
+						b.textContent = single_res.commented_by__username + " ";
+						span.textContent = single_res.comment;
+					} else if (res.keyword == "likes") {
+						b.textContent = single_res.username;
+					}
 
 					modal_body.appendChild(b);
 					modal_body.appendChild(span);
