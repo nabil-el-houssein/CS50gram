@@ -52,6 +52,9 @@
 						<button class="btn btn-outline-dark comment" data-id="{{post.id}}" type="button">Add Comment</button>
 					</div>
 
+					<!-- Div to show recently added comment -->
+					<div id="recent_comment"></div>
+					
 					<!-- Show comments -->
 					{% if post.comments.all %}
 
@@ -63,15 +66,12 @@
 							</div>
 						{% endfor %}
 
-						<!-- Div to show recently added comment -->
-						<div id="recent_comment"></div>
-
 						<div class="text-center mb-2 view-all">
 							<a data-toggle="modal" data-id="{{post.id}}" id="view-comments" data-target="#exampleModalCenter">View all comments...</a>
 						</div>
 
 					{% endif %}
-
+				
 				</div>
 			</div>
 			

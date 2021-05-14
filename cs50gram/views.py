@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
+from django.db.models import Q
 import datetime
 
 from .forms import UserRegisterForm, UserLoginForm, PostForm, ProfileForm
@@ -14,7 +15,13 @@ from .models import User, Post, Comment, Profile
 
 @login_required
 def index(request):
-	return render(request, "cs50gram/index.html")
+
+	# Displays the posts of the user followings and the current user
+	followings = Profile.objects.get(user=request.user).followings.all()
+
+	posts = Post.objects.filter(Q(posted_by__in=followings) | Q(posted_by=request.user)).order_by("date_posted").reverse()
+
+	return render(request, "cs50gram/index.html", {"posts": posts})
 
 
 def register(request):
