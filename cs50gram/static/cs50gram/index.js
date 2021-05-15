@@ -131,4 +131,38 @@ document.addEventListener('DOMContentLoaded', function() {
 			})
 		})
 	})
+
+	// Delete a post without requiring reload of the entire page
+	delete_btn = document.querySelectorAll(".delete");
+	delete_btn.forEach(element => {
+		element.addEventListener("click", () => {
+
+			if (confirm("You are about to delete this post.\nThis action cannot be undone.")) {
+
+				// Delete the post
+				id = element.getAttribute("data-id");
+				post = document.querySelector(`#post-${id}`);
+
+				// Creates a form to be posted to the API
+				form = new FormData();
+				form.append("id", id);
+
+				fetch("/delete/", {
+					method: "POST",
+					body: form,
+				})
+				.then(res => res.json())
+				.then(res => {
+					if (res.status == 201) {
+						// Delete the post
+						post.remove();
+					}
+				})
+
+			} else {
+				return false;
+			}
+			
+		})
+	})
 })

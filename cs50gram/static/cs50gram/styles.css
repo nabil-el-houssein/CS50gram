@@ -100,4 +100,13 @@
 		position: absolute;
 		margin-left: 500px;
 	}
+	
+.col-md-6 > h5 > .delete {
+	color: red;
+}
+
+.col-md-6 > h5 > .delete:hover {
+	color: red;
+	text-decoration: underline;
+	cursor: pointer;
 }
