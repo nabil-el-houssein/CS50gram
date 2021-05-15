@@ -214,3 +214,28 @@ def load_comments(request, post_id):
 		
 	except:
 		return JsonResponse({"error": "Post not found", "status": 404})
+
+
+@csrf_exempt
+@login_required
+def delete_post(request):
+	"""Delete a Post"""
+
+	if request.method == "POST":
+		# Gets the form data from the js
+		post_id = request.POST.get("id")
+
+		try:
+			post = Post.objects.get(pk=post_id)
+
+			# Check if the logged in user owns the post
+			if post.posted_by == request.user:
+				post.delete()
+				return JsonResponse({"status": 201})
+			else:
+				return JsonResponse({"error": "Permission Denied", "status": 403})
+		except:
+			return JsonResponse({"error": "Post not found", "status": 404})
+
+	# If the request is GET send a bad request (status 400)
+	return JsonResponse({}, status=400)
