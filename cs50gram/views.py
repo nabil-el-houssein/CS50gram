@@ -146,10 +146,10 @@ def add_post(request):
 
 @login_required
 def explore(request):
-	"""Renders all the posts on the network"""
+	"""Renders all the posts on the network except that of the current user"""
 
 	# Displays the post showing the newest first
-	posts = Post.objects.all().order_by("date_posted").reverse()
+	posts = Post.objects.exclude(posted_by=request.user).order_by("date_posted").reverse()
 
 	return render(request, "cs50gram/explore.html", {"posts": posts})
 
