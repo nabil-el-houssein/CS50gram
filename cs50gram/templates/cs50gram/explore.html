@@ -16,7 +16,8 @@
 				<div class="col-md-6" id="post-{{post.id}}" style="background-color: #f4f6f6">
 
 					<!-- Username -->
-					<h5> @{{ post.posted_by }} 
+					<h5> 
+						<a href="{% url 'profile' post.posted_by %}"> @{{ post.posted_by }} </a>
 						{% if request.user == post.posted_by %}
 							<a data-id="{{post.id}}" class="delete float-right">Delete Post</a>
 						{% endif %}
