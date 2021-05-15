@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Row, Column
 import re
@@ -134,12 +135,17 @@ class ProfileForm(forms.ModelForm):
 
 	class Meta:
 		model = Profile
-		fields = ["first_name", "last_name", "birthdate", "bio", "gender"]
+		fields = ["profile_pic", "first_name", "last_name", "birthdate", "bio", "gender"]
 
 		# Add widgets to specific form fields 
 		widgets = {
 			"birthdate": forms.SelectDateWidget(years=range(1950, date.today().year)),
 			"bio": forms.Textarea(attrs={"rows": 2, "id": "textarea"}),
+		}
+
+		# Overrides the labels for specific form fields
+		labels = {
+			"profile_pic": _("Update Profile Picture"),
 		}
 
 
@@ -154,6 +160,7 @@ class ProfileForm(forms.ModelForm):
 		self.helper.add_input(Submit("save", "Update Profile", css_class='btn-primary btn-dark'))
 
 		self.helper.layout = Layout(
+			"profile_pic",
 			Row(
 				Column("first_name"),
 				Column("last_name"),
