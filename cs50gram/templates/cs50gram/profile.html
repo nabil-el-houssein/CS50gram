@@ -151,6 +151,10 @@
 						</div>
 
 						<!-- Show comments -->
+						{% if post.comments.all.count == 0 %}
+						<!-- Div to show recently added comment -->
+							<div id="recent_comment"></div>
+						{% endif %}
 						{% if post.comments.all %}
 
 							<!-- Gets the comments of each post based on the related_name -->

@@ -69,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					
 					// Show the new comment
 					recent_comment = document.querySelector("#recent_comment");
+					div = document.createElement("div");
 					b = document.createElement("b");
 					span = document.createElement("span");
 					span.classList.add("gray")
@@ -76,8 +77,10 @@ document.addEventListener('DOMContentLoaded', function() {
 					b.textContent =  res.commented_by;
 					span.textContent = comment.value;
 
-					recent_comment.appendChild(b)
-					recent_comment.appendChild(span)
+					div.appendChild(b);
+					div.appendChild(span);
+
+					recent_comment.appendChild(div);
 
 					// Clear the input value
 					comment.value = '';

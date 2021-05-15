@@ -13,6 +13,13 @@
 	</div>
 
 	<div class="container" >
+		
+		{% if posts.all.count == 0 %}
+			<center>
+				<h3 class="mt-4">Start following some people to see their posts</h3>
+			</center>
+		{% endif %}
+
 		{% for post in posts %}
 
 			<div class="row justify-content-center mt-3">
@@ -59,11 +66,12 @@
 						<input type="text" placeholder="Add Comment" id="post-comment-{{post.id}}" class="form-control mr-1">
 						<button class="btn btn-outline-dark comment" data-id="{{post.id}}" type="button">Add Comment</button>
 					</div>
-
-					<!-- Div to show recently added comment -->
-					<div id="recent_comment"></div>
 					
 					<!-- Show comments -->
+					{% if post.comments.all.count == 0 %}
+						<!-- Div to show recently added comment -->
+						<div id="recent_comment"></div>
+					{% endif %}
 					{% if post.comments.all %}
 
 						<!-- Gets the comments of each post based on the related_name -->
@@ -73,6 +81,9 @@
 								<span class="gray"> {{ comment.comment }} </span>
 							</div>
 						{% endfor %}
+
+						<!-- Div to show recently added comment -->
+						<div id="recent_comment"></div>
 
 						<div class="text-center mb-2 view-all">
 							<a data-toggle="modal" class="show" data-keyword="comments" data-id="{{post.id}}" data-target="#exampleModalCenter">View all comments...</a>
