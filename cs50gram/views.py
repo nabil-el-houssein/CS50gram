@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import datetime
+import os
 
 from .forms import UserRegisterForm, UserLoginForm, PostForm, ProfileForm
 from .models import User, Post, Comment, Profile
@@ -155,7 +156,7 @@ def edit_profile(request):
 
 	if request.method == "POST":
 
-		form = ProfileForm(request.POST, instance=profile)
+		form = ProfileForm(request.POST, request.FILES, instance=profile)
 
 		if form.is_valid():
 			form.save()
@@ -187,7 +188,8 @@ def edit_profile(request):
 		"bio": profile.bio
 	}
 	form = ProfileForm(initial=initial)
-	return render(request, "cs50gram/edit_profile.html", {"form": form})
+	profile_pic = profile.profile_pic.url
+	return render(request, "cs50gram/edit_profile.html", {"form": form, "profile_pic": profile_pic})
 
 
 @csrf_exempt
