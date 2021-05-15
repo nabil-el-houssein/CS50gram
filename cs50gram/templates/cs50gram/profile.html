@@ -28,26 +28,12 @@
 						<a href="{% url 'edit-profile' %}"><button class="btn profile-edit-btn">Edit Profile</button></a>
 					{% elif user.is_authenticated and request.user.username != profile.user %}
 
-							<!-- If the user already has no followers; permit to follow -->
-							{% if profile.user.followers.all.count == 0 %}
-
-								<button data-id="{{profile.user}}" class="btn profile-edit-btn follow"><span id="keyword">Follow</span></button>
-
-							{% else %}
-
-								<!-- If the user has followers; check if the current user already follows -->
-								{% for follower in profile.user.followers.all %}
-
-									{% if request.user == follower.user %}
-										<button data-id="{{profile.user}}" class="btn profile-edit-btn follow"><span id="keyword">Unfollow</span></button>
-									{% else %}
-										<button data-id="{{profile.user}}" class="btn profile-edit-btn follow"><span id="keyword">Follow</span></button>
-									{% endif %}
-
-								{% endfor %}
-
-							{% endif %}
-
+						<!-- If the user has followers; check if the current user already follows -->
+						{% if is_follower %}
+							<button data-id="{{profile.user}}" class="btn profile-edit-btn follow"><span id="keyword">Unfollow</span></button>
+						{% else %}
+							<button data-id="{{profile.user}}" class="btn profile-edit-btn follow"><span id="keyword">Follow</span></button>
+						{% endif %}
 
 					{% endif %}
 					<!-- button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button -->

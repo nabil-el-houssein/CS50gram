@@ -161,7 +161,11 @@ def profile(request, username):
 	# Gets the user profile based on the username
 	profile = Profile.objects.get(user__username=username)
 
-	return render(request, "cs50gram/profile.html", {"profile": profile})
+	# Checks if the current user is following the profile
+	is_follower = profile.user.followers.all().filter(user=request.user).exists()
+	print(is_follower)
+
+	return render(request, "cs50gram/profile.html", {"profile": profile, "is_follower": is_follower})
 
 
 @login_required
