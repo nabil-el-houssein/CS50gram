@@ -16,10 +16,15 @@
 		{% for post in posts %}
 
 			<div class="row justify-content-center mt-3">
-				<div class="col-md-6" style="background-color: #f4f6f6">
+				<div id="post-{{post.id}}" class="col-md-6" style="background-color: #f4f6f6">
 
 					<!-- Username -->
-					<a href="{% url 'profile' post.posted_by %}"><h5 class="mt-2"> @{{ post.posted_by }} </h5></a>
+					<h5> 
+						<a href="{% url 'profile' post.posted_by %}"> @{{ post.posted_by }} </a>
+						{% if request.user == post.posted_by %}
+							<a data-id="{{post.id}}" class="delete float-right">Delete Post</a>
+						{% endif %}
+					</h5>
 
 
 					<!-- Post image -->
